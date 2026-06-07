@@ -7,16 +7,20 @@ import com.example.school.dto.AttendanceResponse;
 
 public interface AttendanceService {
 
-    AttendanceResponse createAttendance(
-            AttendanceRequest request);
+        AttendanceResponse createAttendance(
+                        AttendanceRequest request);
 
-    List<AttendanceResponse> getAllAttendances();
+        List<AttendanceResponse> getAllAttendances();
 
-    AttendanceResponse updateAttendance(
-            Long id,
-            AttendanceRequest request);
+        AttendanceResponse updateAttendance(
+                        Long id,
+                        AttendanceRequest request);
 
-    AttendanceResponse getById(Long id);
+        AttendanceResponse getById(Long id);
 
-    void deleteAttendance(Long id);
+        void deleteAttendance(Long id);
+
+        List<AttendanceResponse> getMonthlyAttendanceReport(int month, int year);
+
+        AttendanceResponse markAllPresent(Long subjectId);
 }

@@ -18,6 +18,13 @@ public class GradeController {
 
     private final GradeService gradeService;
 
+    @GetMapping("/student/{studentId}/average")
+    public Double getStudentAverage(
+            @PathVariable Long studentId) {
+
+        return gradeService.getStudentAverage(studentId);
+    }
+
     // CREATE
     @PostMapping
     public GradeResponse createGrade(@RequestBody GradeRequest req) {

@@ -17,87 +17,130 @@ import com.example.school.service.GradeService;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class GradeServiceImpl implements GradeService {
-    private final ExamrpoSitory examrpoSitory;
-    private final GradeRepository gradeRepository;
-    private final StudentRepository studentRepository;
 
-    @Override
-    public GradeResponse createGrdae(GradeRequest req) {
-        Student stu = studentRepository.findById(req.getStudentId())
-                .orElseThrow(() -> new RuntimeException("Student Not Found"));
-        Exam exam = examrpoSitory.findById(req.getExamId())
-                .orElseThrow(() -> new RuntimeException("Exam not Found"));
-        Grade g = new Grade();
-        g.setStudent(stu);
-        g.setExam(exam);
-        g.setScore(req.getScore());
-        g.setGrade(req.getGrade());
-        g.setRemark(req.getRemark());
-        return mapToResponse(gradeRepository.save(g));
-    }
+        private final ExamrpoSitory examrpoSitory;
+        private final GradeRepository gradeRepository;
+        private final StudentRepository studentRepository;
 
-    @Override
-    public List<GradeResponse> getAllGrade() {
+        @Override
+        public Double getStudentAverage(Long studentId) {
 
-        return gradeRepository.findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
+                List<Grade> grades = gradeRepository.findByStudentId(studentId);
 
-    @Override
-    public GradeResponse updateGrade(Long id, GradeRequest req) {
-        // 1. Find the existing grade record by its own ID
-        Grade g = gradeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Grade record not Found"));
+                return grades.stream()
+                                .mapToDouble(Grade::getScore)
+                                .average()
+                                .orElse(0.0);
+        }
 
-        // 2. Lookup the correct associated entities using the IDs stored inside the
-        // request object!
-        Exam e = examrpoSitory.findById(req.getExamId())
-                .orElseThrow(() -> new RuntimeException("Exam not Found"));
+        @Override
+        public GradeResponse createGrdae(GradeRequest req) {
 
-        Student s = studentRepository.findById(req.getStudentId())
-                .orElseThrow(() -> new RuntimeException("Student not Found"));
+                Student stu = studentRepository.findById(req.getStudentId())
+                                .orElseThrow(() -> new RuntimeException("Student Not Found"));
 
-        // 3. Bind new values safely
-        g.setStudent(s);
-        g.setExam(e);
-        g.setScore(req.getScore());
-        g.setRemark(req.getRemark());
-        g.setGrade(req.getGrade());
+                Exam exam = examrpoSitory.findById(req.getExamId())
+                                .orElseThrow(() -> new RuntimeException("Exam Not Found"));
 
-        return mapToResponse(gradeRepository.save(g));
-    }
+                Grade g = new Grade();
 
-    @Override
-    public GradeResponse getById(Long id) {
+                g.setStudent(stu);
+                g.setExam(exam);
+                g.setScore(req.getScore());
+                g.setGrade(calculateGrade(req.getScore()));
+                g.setRemark(req.getRemark());
 
-        Grade grade = gradeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Grade not found"));
+                return mapToResponse(gradeRepository.save(g));
+        }
 
-        return mapToResponse(grade);
-    }
+        @Override
+        public List<GradeResponse> getAllGrade() {
 
-    @Override
-    public void deleteGrade(Long id) {
+                return gradeRepository.findAll()
+                                .stream()
+                                .map(this::mapToResponse)
+                                .collect(Collectors.toList());
+        }
 
-        gradeRepository.deleteById(id);
-    }
+        @Override
+        public GradeResponse getById(Long id) {
 
-    private GradeResponse mapToResponse(Grade g) {
-        GradeResponse gr = new GradeResponse();
-        gr.setId(g.getId());
-        gr.setStudentId(g.getStudent().getId());
-        gr.setStudentName(g.getStudent().getFirstName() + " " +
-                g.getStudent().getLastName());
-        gr.setExamId(g.getExam().getId());
-        gr.setExamTitle(g.getExam().getTitle());
-        gr.setScore(g.getScore());
-        gr.setGrade(g.getGrade());
-        gr.setRemark(g.getRemark());
-        return gr;
-    }
+                Grade grade = gradeRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Grade Not Found"));
+
+                return mapToResponse(grade);
+        }
+
+        @Override
+        public GradeResponse updateGrade(Long id, GradeRequest req) {
+
+                Grade g = gradeRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Grade Record Not Found"));
+
+                Student stu = studentRepository.findById(req.getStudentId())
+                                .orElseThrow(() -> new RuntimeException("Student Not Found"));
+
+                Exam exam = examrpoSitory.findById(req.getExamId())
+                                .orElseThrow(() -> new RuntimeException("Exam Not Found"));
+
+                g.setStudent(stu);
+                g.setExam(exam);
+                g.setScore(req.getScore());
+                g.setGrade(calculateGrade(req.getScore()));
+                g.setRemark(req.getRemark());
+
+                return mapToResponse(gradeRepository.save(g));
+        }
+
+        @Override
+        public void deleteGrade(Long id) {
+
+                Grade grade = gradeRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Grade Not Found"));
+
+                gradeRepository.delete(grade);
+        }
+
+        private String calculateGrade(Double score) {
+
+                if (score >= 90) {
+                        return "A";
+                } else if (score >= 80) {
+                        return "B";
+                } else if (score >= 70) {
+                        return "C";
+                } else if (score >= 60) {
+                        return "D";
+                } else {
+                        return "F";
+                }
+        }
+
+        private GradeResponse mapToResponse(Grade g) {
+
+                GradeResponse gr = new GradeResponse();
+
+                gr.setId(g.getId());
+
+                if (g.getStudent() != null) {
+                        gr.setStudentId(g.getStudent().getId());
+                        gr.setStudentName(
+                                        g.getStudent().getFirstName() + " " +
+                                                        g.getStudent().getLastName());
+                }
+
+                if (g.getExam() != null) {
+                        gr.setExamId(g.getExam().getId());
+                        gr.setExamTitle(g.getExam().getTitle());
+                }
+
+                gr.setScore(g.getScore());
+                gr.setGrade(g.getGrade());
+                gr.setRemark(g.getRemark());
+
+                return gr;
+        }
 }

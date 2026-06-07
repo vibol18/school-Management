@@ -24,7 +24,7 @@ public class Attendance {
     @JsonIgnoreProperties({ "clazz", "parent", "course", "user" })
 
     private Student student;
-
+    private LocalDate attendanceDate;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "subject_id")
     @JsonIgnoreProperties({ "course", "teacher", "attendances" })

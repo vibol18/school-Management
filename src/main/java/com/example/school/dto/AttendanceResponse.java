@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class AttendanceResponse {
     private Long id;
+    private LocalDate attendanceDate;
 
     private Long studentId;
     private String studentName;

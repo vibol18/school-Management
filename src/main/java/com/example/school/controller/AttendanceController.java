@@ -25,6 +25,12 @@ import lombok.RequiredArgsConstructor;
 public class AttendanceController {
     private final AttendanceService attendanceService;
 
+    @PostMapping("/mark-all-present/{subjectId}")
+    public AttendanceResponse markAllPresent(
+            @PathVariable Long subjectId) {
+        return attendanceService.markAllPresent(subjectId);
+    }
+
     @GetMapping
     List<AttendanceResponse> showallAttendance() {
         return attendanceService.getAllAttendances();

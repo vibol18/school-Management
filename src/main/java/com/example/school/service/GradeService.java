@@ -15,4 +15,6 @@ public interface GradeService {
     GradeResponse updateGrade(Long id, GradeRequest req);
 
     void deleteGrade(Long id);
+
+    Double getStudentAverage(Long studentId);
 }

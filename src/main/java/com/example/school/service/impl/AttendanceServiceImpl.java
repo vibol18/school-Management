@@ -64,6 +64,45 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
+    public AttendanceResponse markAllPresent(Long subjectId) {
+
+        List<Student> students = studentRepository.findAll();
+
+        Subject subject = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new RuntimeException("Subject not found"));
+
+        AttendanceResponse response = new AttendanceResponse();
+
+        for (Student student : students) {
+
+            Attendance attendance = new Attendance();
+
+            attendance.setStudent(student);
+            attendance.setSubject(subject);
+            attendance.setDate(LocalDate.now());
+            attendance.setStatus(AttendanceStatus.PRESENT);
+            attendance.setRemark("Marked automatically");
+
+            attendanceRepository.save(attendance);
+
+            response.setSubjectId(subject.getId());
+            response.setSubjectName(subject.getName());
+        }
+
+        return response;
+    }
+
+    @Override
+    public List<AttendanceResponse> getMonthlyAttendanceReport(int month, int year) {
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+        return attendanceRepository.findByDateBetween(startDate, endDate)
+                .stream()
+                .map(this::map)
+                .toList();
+    }
+
+    @Override
     public AttendanceResponse getById(Long id) {
 
         Attendance a = attendanceRepository.findById(id)
