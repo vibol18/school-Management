@@ -139,9 +139,6 @@ public class AuthService {
                 return "Register Successfully";
         }
 
-        // =========================
-        // LOGIN
-        // =========================
         public LoginResponse login(LoginRequest request) {
 
                 User user = userRepository.findByEmail(request.getEmail())

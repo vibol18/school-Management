@@ -1,7 +1,6 @@
 package com.example.school.entity;
 
 import java.time.LocalTime;
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,8 +17,12 @@ public class TimeTable {
     private Long id;
 
     // =========================
-    // RELATIONSHIP
+    // RELATIONSHIPS
     // =========================
+
+    @ManyToOne
+    @JoinColumn(name = "teacher_id") // Changed from Long teacherId to a proper relationship
+    private Teacher teacher;
 
     @ManyToOne
     @JoinColumn(name = "class_id")
@@ -28,6 +31,10 @@ public class TimeTable {
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
+
+    // =========================
+    // FIELDS
+    // =========================
 
     private String dayOfWeek;
 

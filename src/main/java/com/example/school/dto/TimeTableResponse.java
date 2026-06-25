@@ -1,7 +1,6 @@
 package com.example.school.dto;
 
 import java.time.LocalTime;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,9 +17,10 @@ public class TimeTableResponse {
 
     private String dayOfWeek;
 
+    private Long teacherId;
+    private String teacherName; // Added for UI convenience
+
     private LocalTime startTime;
-
     private LocalTime endTime;
-
     private String room;
 }

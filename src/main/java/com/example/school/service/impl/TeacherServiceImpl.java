@@ -35,6 +35,8 @@ public class TeacherServiceImpl implements TeacherService {
         teacher.setLastName(request.getLastName());
         teacher.setEmail(request.getEmail());
         teacher.setSalary(request.getSalary());
+        teacher.setEmploymentType(request.getEmploymentType());
+        teacher.setExperienceYears(request.getExperienceYears());
         teacher.setDepartment(department);
 
         Teacher saved = teacherRepository.save(teacher);
@@ -74,6 +76,8 @@ public class TeacherServiceImpl implements TeacherService {
         teacher.setLastName(request.getLastName());
         teacher.setEmail(request.getEmail());
         teacher.setSalary(request.getSalary());
+        teacher.setEmploymentType(request.getEmploymentType());
+        teacher.setExperienceYears(request.getExperienceYears());
         teacher.setDepartment(department);
 
         return mapToResponse(teacherRepository.save(teacher));
@@ -98,6 +102,8 @@ public class TeacherServiceImpl implements TeacherService {
         res.setLastName(teacher.getLastName());
         res.setEmail(teacher.getEmail());
         res.setSalary(teacher.getSalary());
+        res.setEmploymentType(teacher.getEmploymentType());
+        res.setExperienceYears(teacher.getExperienceYears());
 
         if (teacher.getDepartment() != null) {
             res.setDepartmentName(teacher.getDepartment().getName());

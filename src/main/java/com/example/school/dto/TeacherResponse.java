@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.example.school.entity.ClassRoom;
+import com.example.school.entity.EmploymentType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,8 @@ public class TeacherResponse {
     private String email;
     private String phone;
     private BigDecimal salary;
+    private EmploymentType employmentType;
+    private Integer experienceYears;
     private String departmentName;
     private List<ClassRoom> classes;
 }

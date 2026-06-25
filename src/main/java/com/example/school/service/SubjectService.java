@@ -30,13 +30,10 @@ public class SubjectService {
                 .map(this::map)
                 .toList();
     }
-
-    // GET ONE
     public SubjectResponse getSubjectById(Long id) {
         return map(findById(id));
     }
 
-    // CREATE
     public SubjectResponse createSubject(SubjectRequest request) {
 
         Subject subject = new Subject();

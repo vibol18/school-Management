@@ -10,7 +10,7 @@ import com.example.school.dto.GradeResponse;
 import com.example.school.entity.Exam;
 import com.example.school.entity.Grade;
 import com.example.school.entity.Student;
-import com.example.school.repository.ExamrpoSitory;
+import com.example.school.repository.ExamRepository;
 import com.example.school.repository.GradeRepository;
 import com.example.school.repository.StudentRepository;
 import com.example.school.service.GradeService;
@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GradeServiceImpl implements GradeService {
 
-        private final ExamrpoSitory examrpoSitory;
+        private final ExamRepository examRepository;
         private final GradeRepository gradeRepository;
         private final StudentRepository studentRepository;
 
@@ -38,27 +38,21 @@ public class GradeServiceImpl implements GradeService {
 
         @Override
         public GradeResponse createGrdae(GradeRequest req) {
-
                 Student stu = studentRepository.findById(req.getStudentId())
                                 .orElseThrow(() -> new RuntimeException("Student Not Found"));
-
-                Exam exam = examrpoSitory.findById(req.getExamId())
+                Exam exam = examRepository.findById(req.getExamId())
                                 .orElseThrow(() -> new RuntimeException("Exam Not Found"));
-
                 Grade g = new Grade();
-
                 g.setStudent(stu);
                 g.setExam(exam);
                 g.setScore(req.getScore());
                 g.setGrade(calculateGrade(req.getScore()));
                 g.setRemark(req.getRemark());
-
                 return mapToResponse(gradeRepository.save(g));
         }
 
         @Override
         public List<GradeResponse> getAllGrade() {
-
                 return gradeRepository.findAll()
                                 .stream()
                                 .map(this::mapToResponse)
@@ -67,10 +61,8 @@ public class GradeServiceImpl implements GradeService {
 
         @Override
         public GradeResponse getById(Long id) {
-
                 Grade grade = gradeRepository.findById(id)
                                 .orElseThrow(() -> new RuntimeException("Grade Not Found"));
-
                 return mapToResponse(grade);
         }
 
@@ -83,9 +75,8 @@ public class GradeServiceImpl implements GradeService {
                 Student stu = studentRepository.findById(req.getStudentId())
                                 .orElseThrow(() -> new RuntimeException("Student Not Found"));
 
-                Exam exam = examrpoSitory.findById(req.getExamId())
+                Exam exam = examRepository.findById(req.getExamId())
                                 .orElseThrow(() -> new RuntimeException("Exam Not Found"));
-
                 g.setStudent(stu);
                 g.setExam(exam);
                 g.setScore(req.getScore());

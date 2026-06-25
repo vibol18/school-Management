@@ -27,10 +27,17 @@ public class Teacher extends BaseEntity {
     private String phone;
     private BigDecimal salary;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "employment_type")
+    private EmploymentType employmentType;
+
+    @Column(name = "experience_years")
+    private Integer experienceYears;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     @JsonIgnoreProperties({ "teachers" })
-    // ✅ allow department info but block its teacher list
+
     private Department department;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

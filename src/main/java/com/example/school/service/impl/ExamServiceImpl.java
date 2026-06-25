@@ -11,7 +11,7 @@ import com.example.school.entity.ClassRoom;
 import com.example.school.entity.Exam;
 import com.example.school.entity.Subject;
 import com.example.school.repository.ClassRoomrepository;
-import com.example.school.repository.ExamrpoSitory;
+import com.example.school.repository.ExamRepository;
 import com.example.school.repository.SubjectRepository;
 import com.example.school.service.ExamService;
 
@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ExamServiceImpl implements ExamService {
 
-    private final ExamrpoSitory examRepository;
+    private final ExamRepository examRepository;
     private final SubjectRepository subjectRepository;
     private final ClassRoomrepository classRoomrepository;
 
@@ -30,7 +30,6 @@ public class ExamServiceImpl implements ExamService {
         Subject subject = subjectRepository.findById(req.getSubjectId())
                 .orElseThrow(() -> new RuntimeException("Subject not found"));
 
-        // ទាញយក ClassRoom ពី Database
         ClassRoom classRoom = classRoomrepository.findById(req.getClassRoomId())
                 .orElseThrow(() -> new RuntimeException("Classroom not found"));
 
@@ -62,7 +61,6 @@ public class ExamServiceImpl implements ExamService {
         return mapToResponse(exam);
     }
 
-    @Override
     public ExamResponse updateExam(Long id, ExamRequest req) {
         Exam exam = examRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Exam not found"));
@@ -70,7 +68,6 @@ public class ExamServiceImpl implements ExamService {
         Subject subject = subjectRepository.findById(req.getSubjectId())
                 .orElseThrow(() -> new RuntimeException("Subject not found"));
 
-        // ទាញយក ClassRoom មកកែប្រែ
         ClassRoom classRoom = classRoomrepository.findById(req.getClassRoomId())
                 .orElseThrow(() -> new RuntimeException("Classroom not found"));
 
@@ -83,7 +80,6 @@ public class ExamServiceImpl implements ExamService {
         return mapToResponse(examRepository.save(exam));
     }
 
-    @Override
     public void DeleteExam(Long id) {
 
         examRepository.deleteById(id);
