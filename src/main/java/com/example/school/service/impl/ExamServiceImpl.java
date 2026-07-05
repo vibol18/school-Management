@@ -42,7 +42,6 @@ public class ExamServiceImpl implements ExamService {
 
         return mapToResponse(examRepository.save(exam));
     }
-
     @Override
     public List<ExamResponse> getAllExam() {
 

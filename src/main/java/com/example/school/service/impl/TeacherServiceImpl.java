@@ -3,7 +3,10 @@ package com.example.school.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.school.dto.TeacherRequest;
 import com.example.school.dto.TeacherResponse;
@@ -26,7 +29,7 @@ public class TeacherServiceImpl implements TeacherService {
     public TeacherResponse createTeacher(TeacherRequest request) {
 
         Department department = departmentRepository.findById(request.getDepartmentId())
-                .orElseThrow(() -> new RuntimeException("Department not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Department not found"));
 
         Teacher teacher = new Teacher();
 
@@ -45,6 +48,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TeacherResponse> showAllTeachers() {
 
         return teacherRepository.findAll()
@@ -57,7 +61,7 @@ public class TeacherServiceImpl implements TeacherService {
     public TeacherResponse showTeacherById(Long id) {
 
         Teacher teacher = teacherRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Teacher not found"));
 
         return mapToResponse(teacher);
     }
@@ -66,10 +70,10 @@ public class TeacherServiceImpl implements TeacherService {
     public TeacherResponse updateTeacher(Long id, TeacherRequest request) {
 
         Teacher teacher = teacherRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Teacher not found"));
 
         Department department = departmentRepository.findById(request.getDepartmentId())
-                .orElseThrow(() -> new RuntimeException("Department not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Department not found"));
 
         teacher.setTeacherCode(request.getTeacherCode());
         teacher.setFirstName(request.getFirstName());
@@ -87,7 +91,7 @@ public class TeacherServiceImpl implements TeacherService {
     public void deleteTeacher(Long id) {
 
         Teacher teacher = teacherRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Teacher not found"));
 
         teacherRepository.delete(teacher);
     }

@@ -28,7 +28,6 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     public ClassRoom create(ClassRoom classroom) {
         return repo.save(classroom);
     }
-
     @Override
     public ClassRoom update(Long id, ClassRoom classroom) {
         ClassRoom existing = getById(id);
@@ -42,7 +41,6 @@ public class ClassRoomServiceImpl implements ClassRoomService {
 
         return repo.save(existing);
     }
-
     @Override
     public void delete(Long id) {
         repo.deleteById(id);

@@ -24,25 +24,16 @@ public class StudentService {
 
     private final CourseRepository courseRepository;
 
-    // =========================
-    // GET ALL STUDENTS
-    // =========================
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
 
-    // =========================
-    // GET STUDENT BY ID
-    // =========================
     public Student getStudentById(Long id) {
 
         return studentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
     }
 
-    // =========================
-    // CREATE STUDENT
-    // =========================
     public Student createStudent(StudentRequest request) {
 
         Student student = new Student();
